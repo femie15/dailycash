@@ -1,5 +1,13 @@
 <?php
 include('connection.php');
+if (!isset($_SESSION['id'])) {
+    header('location:login');
+}
+
+$userid=$_SESSION['id'];
+$em=$_SESSION['em'];
+$fn=$_SESSION['fn'];
+$ln=$_SESSION['ln'];
 
 $messages="";
 
@@ -31,7 +39,7 @@ if (isset($_GET['id'])) {
 
                 if ($conn->query($sql) === TRUE) {
                     $messages= "Record updated successfully";
-                    header('location:index.php');
+                    header('location:index');
                 } else {
                     $messages="Error updating record: " . $conn->error;
                 }
@@ -54,12 +62,23 @@ if (isset($_GET['id'])) {
                     //End 
     
                     //Insert into database
-                    $sql = "INSERT INTO transaction (item, quantity, price) VALUES ('$item', '$quantity', '$price')";
+                    $sql = "INSERT INTO transaction (item, quantity, price, userid) VALUES ('$item', '$quantity', '$price', '$userid')";
     
                     if ($conn->query($sql) === TRUE) {
                         $messages= "New record created successfully";
-    
-                        header('location:index.php');
+  
+                        //Send transaction alert
+$to = $em;
+$subject = "Transaction alert";
+$mailcontent = "Hello world!";
+$headers = "From: help@mimiestate.com" . "\r\n" .
+"CC: admin@mimiestate.com";
+
+mail($to,$subject,$mailcontent,$headers);
+//end  
+
+
+                        header('location:index');
                     } else {
                         $messages= "Error: " . $sql . "<br>" . $conn->error;
                     }
@@ -73,16 +92,16 @@ if (isset($_GET['id'])) {
 
 
 $conn->close();
-include('header.php');
+include('header');
 ?>
 
 <body>
 
-<a href="index.php" type="button" class="btn btn-xs btn-info">Go Back</a>
+<a href="index" type="button" class="btn btn-xs btn-info">Go Back</a>
 
 <hr width="400px" style="color:#ffffff;">
     
-<form style="background-color:#5FE036;" action="edit.php" method="POST">
+<form style="background-color:#5FE036;" action="edit" method="POST">
 
 <br><br>
 

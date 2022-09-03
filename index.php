@@ -1,15 +1,19 @@
 <?php
 include('connection.php');
 
+if (!isset($_SESSION['id'])) {
+    header('location:login');
+}
 
 $messages="";
-
+$userid=$_SESSION['id'];
+echo $userid;
 //Select from DB
 $history="";
 $count=1;
 $revenue=0;
 
-        $sql = "SELECT id, item, quantity, price, salestime FROM transaction WHERE softdelete='0'";
+        $sql = "SELECT id, item, quantity, price, salestime FROM transaction WHERE softdelete='0' AND userid='$userid'";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -31,9 +35,9 @@ $revenue=0;
                             <td>".$total."</td>
                             <td>".$salestime."</td>
                             <td>
-                            <a href='edit.php?id=".$id."' type='button' class='btn btn-xs btn-info'>Edit</a> 
+                            <a href='edit?id=".$id."' type='button' class='btn btn-xs btn-info'>Edit</a> 
                              
-                            <a href='delete.php?id=".$id."' type='button' class='btn btn-xs btn-danger'>Delete</a>
+                            <a href='delete?id=".$id."' type='button' class='btn btn-xs btn-danger'>Delete</a>
                             </td>
                         </tr>";
 
@@ -63,14 +67,14 @@ include('header.php');
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php">Shop</a>
+                <a class="navbar-brand" href="index">Shop</a>
             </div>
      
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
-                        <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="logout"><i class="fa fa-fw fa-dashboard"></i> Logout</a>
                     </li>
                     
                 </ul>
@@ -95,8 +99,8 @@ include('header.php');
 
 
              <div class="col-lg-12">
-                        <h2>Transactions</h2> 
-                        <a href="edit.php" type="button" class="btn btn-xs btn-info">Add New</a>
+                        <h2>Transactions  &emsp; Welcome <?php echo $_SESSION['fn']; ?>  </h2> 
+                        <a href="edit" type="button" class="btn btn-xs btn-info">Add New</a>
                                 
                         <div class="table-responsive">
                         <br>

@@ -12,7 +12,7 @@ if (isset($_GET['id']) && $_GET['id']!='') {
 $sql = "UPDATE transaction SET softdelete='1' WHERE id=$id";
 
     if ($conn->query($sql) === TRUE) {
-        header('location:index.php');
+        header('location:index');
     }
 
 }
